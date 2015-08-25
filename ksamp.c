@@ -94,16 +94,54 @@ void tiempoSistema(){
 
 	fclose(fp);
 
+}
 
+
+void tiempoCPU(){
+
+	FILE *fp;
+	char cpu[10];
+	int tiempo_usuario1;
+	int tiempo_usuario2;
+	int tiempo_sistema;
+	long tiempo_idle;
+
+	fp = fopen("/proc/stat", "r");
+	fscanf(fp,"%s""%d""%d""%d",cpu,&tiempo_usuario1,&tiempo_usuario2,
+				&tiempo_sistema,&tiempo_idle);
+	printf(" %s",cpu);
+	printf("tiempo de uso de usuario: %d",tiempo_usuario1);
+	printf("tiempo de uso de usuario: %d",tiempo_usuario2);
+	printf("tiempo de uso de sistema: %d",tiempo_sistema);
+	printf("tiempo de proceso idle %d ", tiempo_idle);
+
+}
+void cambioContexto(){
+
+}
+void inicioSistema(){
+
+}
+void nroProcesos(){
 
 }
 
 
-int main(){
 
-	cpuInfo();
-	versionKernel();
-	tiempoSistema();
+int main(int argc, char *argv[]){
+
+	if(argc==1){
+			cpuInfo();
+			versionKernel();
+			tiempoSistema();
+			tiempoCPU();
+		}
+	if(argv[1]=="-s"){
+			tiempoCPU();
+			cambioContexto();
+			inicioSistema();
+			nroProcesos();
+		}
 
 	return 0;
 }
