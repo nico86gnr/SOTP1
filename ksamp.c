@@ -6,6 +6,9 @@
  */
 
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
 
 
 void cpuInfo()
@@ -124,13 +127,13 @@ void tiempoCPU(){
 void cambioContexto(){
 
 	FILE *fp;
-	char buffer[100];
-	char *cambio_contexto;
+	char buffer[50];
+	char *cambio_contexto=NULL;
 
 	fp = fopen("/proc/stat", "r");
 
 	while(cambio_contexto==NULL){
-		fgets(buffer, 100, (FILE*)fp);
+		fgets(buffer, 25, (FILE*)fp);
 		cambio_contexto=strstr(buffer,"ctxt");
 	}
 
@@ -145,13 +148,13 @@ void inicioSistema(){
 void nroProcesos(){
 
 	FILE *fp;
-	char buffer[100];
-	char *procesos;
+	char buffer[50];
+	char *procesos=NULL;
 
 	fp = fopen("/proc/stat", "r");
 
 	while(procesos==NULL){
-		fgets(buffer, 100, (FILE*)fp);
+		fgets(buffer, 25, (FILE*)fp);
 		procesos=strstr(buffer,"processes");
 	}
 
@@ -163,20 +166,38 @@ void nroProcesos(){
 
 int main(int argc, char *argv[]){
 
+
 	if(argc==1){
-			cpuInfo();
-			versionKernel();
-			tiempoSistema();
+		//printf("primer argumento: %s\n",argv[0]);
+		cpuInfo();
+		versionKernel();
+		tiempoSistema();
 		}
-	if(argv[1]=="-s"){
-			cpuInfo();
-			versionKernel();
-			tiempoSistema();
-			tiempoCPU();
-			cambioContexto();
-			inicioSistema();
-			nroProcesos();
+
+	if(argc==2 && strcmp(argv[1],"-s")==0){
+		//printf("segundo argumento %s\n",argv[1]);
+		cpuInfo();
+		versionKernel();
+		tiempoSistema();
+		tiempoCPU();
+		cambioContexto();
+		inicioSistema();
+		nroProcesos();
 		}
+
+	if(argc==4 && strcmp(argv[1],"-l")==0 && atoi(argv[2])!=0
+			&& atoi(argv[3])!=0){
+		//printf("segundo tercer y cuarto argumento %s %s %s\n",argv[1],argv[2],argv[3]);
+		int intervalo=atoi(argv[2]);
+		int duracion=atoi(argv[3]);
+		int repeticiones=duracion/intervalo;
+
+		while(repeticiones>0){
+			printf("dormir %d %s\n",intervalo," segundos");
+			sleep(intervalo);
+			repeticiones--;
+		}
+	}
 
 	return 0;
 }
